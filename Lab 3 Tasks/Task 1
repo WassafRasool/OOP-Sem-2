@@ -1,1 +1,84 @@
+#include <iostream>
+#include <string>
 
+using namespace std;
+
+class markerPen {
+public:
+    string brand, colour;
+    int inklevel;
+    bool refillable;
+
+    // Constructor
+    markerPen(string b, string c, int ink, bool ref) {
+        brand = b;
+        colour = c;
+        inklevel = ink;
+        refillable = ref;
+    }
+
+    void write() {
+        if (inklevel >= 10) {
+            inklevel -= 10;
+            cout << "You wrote with the marker. Ink level: " << inklevel << endl;
+        } else {
+            cout << "Not enough ink to write! Please refill." << endl;
+        }
+    }
+
+    void refill() {
+        if (inklevel == 100) {
+            cout << "The marker does not need a refill!" << endl;
+        } else if (refillable) {
+            inklevel = 100;
+            cout << "The marker has been refilled!" << endl;
+        } else {
+            cout << "This marker is not refillable." << endl;
+        }
+    }
+
+    void displaydetails() {
+        cout << "Brand: " << brand << ", Colour: " << colour << ", Ink Level: " << inklevel << ", Refillable: " << (refillable ? "Yes" : "No") << endl;
+    }
+};
+
+int main() {
+    int choice;
+    markerPen markers[3] = {
+        markerPen("Dollar", "Black", 100, false),
+        markerPen("Signature", "Purple", 80, true),
+        markerPen("Piano", "Blue", 50, true)
+    };
+
+    do {
+        cout << "\nMarker Pen Menu:" << endl;
+        for (int i = 0; i < 3; i++) {
+            cout << i + 1 << ". ";
+            markers[i].displaydetails();
+        }
+
+        cout << "0. Exit" << endl;
+        cout << "Enter choice: ";
+        cin >> choice;
+
+        if (choice > 0 && choice <= 3) {
+            int action;
+            do {
+                cout << "\nMarker Pen Actions:" << endl;
+                cout << "1. Write" << endl;
+                cout << "2. Refill" << endl;
+                cout << "0. Back to Main Menu" << endl;
+                cout << "Enter action: ";
+                cin >> action;
+
+                if (action == 1) {
+                    markers[choice - 1].write();  // Corrected array index
+                } else if (action == 2) {
+                    markers[choice - 1].refill();  // Corrected array index
+                }
+            } while (action != 0);
+        }
+    } while (choice != 0);
+
+    return 0;
+}
