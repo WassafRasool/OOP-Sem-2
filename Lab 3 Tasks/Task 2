@@ -1,0 +1,88 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class teaCup {
+public: 
+    string brand;
+    string colour;
+    int capacity;
+    int currentlevel;
+
+    // Constructor
+    teaCup(string b, string c, int cap, int l) {
+        brand = b;
+        colour = c;
+        capacity = cap;
+        currentlevel = l;
+    }
+
+    void refill() {
+        if (currentlevel == capacity) {
+            cout << "The cup is already full." << endl;
+        } else {
+            currentlevel = capacity;
+            cout << "The cup is now refilled to full capacity." << endl;
+        }
+    }
+
+    void sip() {
+        if (currentlevel == 0) {
+            int a;
+            cout << "The cup is empty. If you want a refill, press 1: ";
+            cin >> a;
+            if (a == 1) {
+                refill();
+            }
+        } else {
+            currentlevel -= 5;
+            if (currentlevel < 0) currentlevel = 0;
+            cout << "You took a sip. Current level: " << currentlevel << endl;
+        }
+    }
+
+    void displaydetails() {
+        cout << "Brand: " << brand << ", Colour: " << colour << ", Capacity: " 
+             << capacity << ", Current Level: " << currentlevel << endl;
+    }
+};
+
+int main() {
+    int choice;
+    teaCup cups[3] = {
+        teaCup("A", "Black", 100, 80),
+        teaCup("B", "White", 70, 0),
+        teaCup("C", "Red", 80, 40)
+    };
+
+    do {
+        cout << "\nTea Cups Menu:" << endl;
+        for (int i = 0; i < 3; i++) {
+            cout << i + 1 << ". ";
+            cups[i].displaydetails();
+        }
+        cout << "0. Exit" << endl;
+        cout << "Enter choice: ";
+        cin >> choice;
+
+        if (choice > 0 && choice <= 3) {
+            int action;
+            do {
+                cout << "\n1. Sip" << endl;
+                cout << "2. Refill" << endl;
+                cout << "0. Back to Main Menu" << endl;
+                cout << "Enter action: ";
+                cin >> action;
+
+                if (action == 1) {
+                    cups[choice - 1].sip();  // Corrected array index
+                } else if (action == 2) {
+                    cups[choice - 1].refill();  // Corrected array index
+                }
+            } while (action != 0);
+        }
+    } while (choice != 0);
+
+    return 0;
+}
