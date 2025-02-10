@@ -1,0 +1,111 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Laptop {
+private:
+    string brand;
+    string model;
+    string processor;
+    int ram; // in GB
+    int storage; // in GB
+    bool is_on; // To keep track if the laptop is turned on or off
+
+public:
+    // Constructor to initialize laptop details
+    Laptop(string b, string m, string p, int r, int s) {
+        brand = b;
+        model = m;
+        processor = p;
+        ram = r;
+        storage = s;
+        is_on = false; // Laptop is initially turned off
+    }
+
+    // Method to turn on the laptop
+    void turn_on() {
+        if (is_on) {
+            cout << "The laptop is already ON." << endl;
+        } else {
+            is_on = true;
+            cout << "Laptop is now ON." << endl;
+        }
+    }
+
+    // Method to turn off the laptop
+    void turn_off() {
+        if (!is_on) {
+            cout << "The laptop is already OFF." << endl;
+        } else {
+            is_on = false;
+            cout << "Laptop is now OFF." << endl;
+        }
+    }
+
+    // Method to run a program
+    void run_program(string program_name) {
+        if (is_on) {
+            cout << "Running " << program_name << " on " << brand << " " << model << "..." << endl;
+        } else {
+            cout << "Please turn on the laptop first to run the program." << endl;
+        }
+    }
+
+    // Method to check specifications
+    void check_specifications() {
+        cout << "Laptop Specifications:" << endl;
+        cout << "Brand: " << brand << endl;
+        cout << "Model: " << model << endl;
+        cout << "Processor: " << processor << endl;
+        cout << "RAM: " << ram << " GB" << endl;
+        cout << "Storage: " << storage << " GB" << endl;
+        cout << (is_on ? "Status: ON" : "Status: OFF") << endl;
+    }
+
+    // Method to compare two laptops
+    void compare(Laptop& other) {
+        cout << "\nComparing Laptops:" << endl;
+        if (ram > other.ram) {
+            cout << brand << " " << model << " has more RAM." << endl;
+        } else if (ram < other.ram) {
+            cout << other.brand << " " << other.model << " has more RAM." << endl;
+        } else {
+            cout << "Both laptops have the same amount of RAM." << endl;
+        }
+
+        if (storage > other.storage) {
+            cout << brand << " " << model << " has more storage." << endl;
+        } else if (storage < other.storage) {
+            cout << other.brand << " " << other.model << " has more storage." << endl;
+        } else {
+            cout << "Both laptops have the same amount of storage." << endl;
+        }
+
+        if (processor == other.processor) {
+            cout << "Both laptops have the same processor." << endl;
+        } else {
+            cout << "The laptops have different processors." << endl;
+        }
+    }
+};
+
+int main() {
+    Laptop laptop1("Dell", "XPS 13", "Intel i7", 16, 512);
+    Laptop laptop2("Apple", "MacBook Pro", "M1", 16, 256);
+
+    laptop1.check_specifications();
+    laptop2.check_specifications();
+
+    laptop1.turn_on();
+    laptop1.run_program("VS Code");
+
+    laptop2.turn_on();
+    laptop2.run_program("Safari");
+
+    laptop1.compare(laptop2);
+
+    laptop1.turn_off();
+    laptop2.turn_off();
+
+    return 0;
+}
