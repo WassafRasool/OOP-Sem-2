@@ -1,0 +1,95 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Planner {
+private:
+    string months[12][31];
+
+public:
+    void add_task(int month, int day, const string &task) {
+        if (month < 0 || month > 11) {
+            cout << "Invalid month. Please provide a month between 1 and 12." << endl;
+            return;
+        }
+        if (day < 1 || day > 31) {
+            cout << "Invalid day. Please provide a day between 1 and 31." << endl;
+            return;
+        }
+        months[month][day - 1] = task;
+        cout << "Task for " << get_month_name(month) << " " << day << " added." << endl;
+    }
+
+    void remove_task(int month, int day) {
+        if (month < 0 || month > 11) {
+            cout << "Invalid month. Please provide a month between 1 and 12." << endl;
+            return;
+        }
+        if (day < 1 || day > 31) {
+            cout << "Invalid day. Please provide a day between 1 and 31." << endl;
+            return;
+        }
+        if (!months[month][day - 1].empty()) {
+            months[month][day - 1].clear();
+            cout << "Task for " << get_month_name(month) << " " << day << " removed." << endl;
+        } else {
+            cout << "No task found for " << get_month_name(month) << " " << day << "." << endl;
+        }
+    }
+
+    void update_task(int month, int day, const string &task) {
+        if (month < 0 || month > 11) {
+            cout << "Invalid month. Please provide a month between 1 and 12." << endl;
+            return;
+        }
+        if (day < 1 || day > 31) {
+            cout << "Invalid day. Please provide a day between 1 and 31." << endl;
+            return;
+        }
+        months[month][day - 1] = task;
+        cout << "Task for " << get_month_name(month) << " " << day << " updated." << endl;
+    }
+
+    void display_tasks(int month) {
+        if (month < 0 || month > 11) {
+            cout << "Invalid month. Please provide a month between 1 and 12." << endl;
+            return;
+        }
+        cout << "Tasks for " << get_month_name(month) << ":" << endl;
+        for (int day = 0; day < 31; ++day) {
+            if (!months[month][day].empty()) {
+                cout << "Day " << day + 1 << ": " << months[month][day] << endl;
+            } else {
+                cout << "Day " << day + 1 << ": No task scheduled." << endl;
+            }
+        }
+    }
+
+private:
+    string get_month_name(int month) {
+        const string month_names[12] = {
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        };
+        return month_names[month];
+    }
+};
+
+int main() {
+    Planner planner;
+
+    planner.add_task(0, 10, "Wedding Meeting with Client A");
+    planner.add_task(0, 15, "Venue booking for Client B");
+
+    planner.display_tasks(0);
+
+    planner.update_task(0, 10, "Wedding Meeting with Client A (Updated)");
+
+    planner.display_tasks(0);
+
+    planner.remove_task(0, 15);
+
+    planner.display_tasks(0);
+
+    return 0;
+}
