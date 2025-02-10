@@ -7,22 +7,20 @@ private:
     string brand;
     string model;
     string processor;
-    int ram; // in GB
-    int storage; // in GB
-    bool is_on; // To keep track if the laptop is turned on or off
+    int ram;
+    int storage;
+    bool is_on;
 
 public:
-    // Constructor to initialize laptop details
     Laptop(string b, string m, string p, int r, int s) {
         brand = b;
         model = m;
         processor = p;
         ram = r;
         storage = s;
-        is_on = false; // Laptop is initially turned off
+        is_on = false;
     }
 
-    // Method to turn on the laptop
     void turn_on() {
         if (is_on) {
             cout << "The laptop is already ON." << endl;
@@ -32,7 +30,6 @@ public:
         }
     }
 
-    // Method to turn off the laptop
     void turn_off() {
         if (!is_on) {
             cout << "The laptop is already OFF." << endl;
@@ -42,7 +39,6 @@ public:
         }
     }
 
-    // Method to run a program
     void run_program(string program_name) {
         if (is_on) {
             cout << "Running " << program_name << " on " << brand << " " << model << "..." << endl;
@@ -51,7 +47,6 @@ public:
         }
     }
 
-    // Method to check specifications
     void check_specifications() {
         cout << "Laptop Specifications:" << endl;
         cout << "Brand: " << brand << endl;
@@ -62,7 +57,6 @@ public:
         cout << (is_on ? "Status: ON" : "Status: OFF") << endl;
     }
 
-    // Method to compare two laptops
     void compare(Laptop& other) {
         cout << "\nComparing Laptops:" << endl;
         if (ram > other.ram) {
