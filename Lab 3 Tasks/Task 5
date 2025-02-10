@@ -1,0 +1,80 @@
+#include <iostream>
+#include <string>
+#include <map>
+#include <iomanip>
+using namespace std;
+
+class GroceryStore {
+private:
+    map<string, double> inventory;
+
+public:
+    void add_item(const string& item, double price) {
+        inventory[item] = price;
+        cout << "Item '" << item << "' added with price Rs." << price << endl;
+    }
+
+    void update_price(const string& item, double new_price) {
+        if (inventory.find(item) != inventory.end()) {
+            inventory[item] = new_price;
+            cout << "Price for '" << item << "' updated to Rs." << new_price << endl;
+        } else {
+            cout << "Item '" << item << "' not found in inventory!" << endl;
+        }
+    }
+
+    void view_inventory() {
+        if (inventory.empty()) {
+            cout << "Inventory is empty!" << endl;
+        } else {
+            cout << "Current Inventory:" << endl;
+            for (const auto& item : inventory) {
+                cout << item.first << " - Rs." << item.second << endl;
+            }
+        }
+    }
+
+    void generate_receipt(const map<string, int>& purchased_items) {
+        double total_amount = 0;
+        cout << "\n------ Receipt ------" << endl;
+        cout << left << setw(20) << "Item" << setw(10) << "Quantity" << setw(10) << "Price" << setw(10) << "Total" << endl;
+
+        for (const auto& purchased_item : purchased_items) {
+            const string& item_name = purchased_item.first;
+            int quantity = purchased_item.second;
+
+            if (inventory.find(item_name) != inventory.end()) {
+                double price = inventory[item_name];
+                double total_price = price * quantity;
+                total_amount += total_price;
+                cout << left << setw(20) << item_name << setw(10) << quantity << setw(10) << price << setw(10) << total_price << endl;
+            } else {
+                cout << "Item '" << item_name << "' not found in inventory!" << endl;
+            }
+        }
+
+        cout << "\nTotal Amount: Rs." << total_amount << endl;
+        cout << "---------------------" << endl;
+    }
+};
+
+int main() {
+    GroceryStore store;
+
+    store.add_item("Apple", 50.0);
+    store.add_item("Banana", 30.0);
+    store.add_item("Tomato", 20.0);
+    store.add_item("Potato", 15.0);
+
+    store.view_inventory();
+
+    store.update_price("Banana", 35.0);
+
+    store.view_inventory();
+
+    map<string, int> purchased_items = {{"Apple", 2}, {"Banana", 3}, {"Potato", 5}};
+
+    store.generate_receipt(purchased_items);
+
+    return 0;
+}
