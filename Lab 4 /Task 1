@@ -2,100 +2,94 @@
 #include <string>
 using namespace std;
 
-class Book{
-	public:
-	string title;
-	float price;
-	int stocks;
-	
-	Book(){
-		title = "Unknown";
-		price = 0.0;
-		stocks = 30;
-	}
-	
-	void updatebook(string t, float p, int s){
-		title = t;
-		price = p;
-		stocks = s;
-		cout << "The book has been updated!" << endl;
-	}	
-	
-	void purchase(int quantity){
-		if (quantity <= stocks){
-			stocks -= quantity;
-			cout << "You have purchased " << quantity << " copies of " <<  title << endl;
-			if (stocks < 5){
-				cout << "Warning! You have low stock of this book!" << endl;
-			}
-		}
-		else {
-			cout << "Insufficient copies!" << endl;
-		}
-	}
-	
-	void displayinfo(){
-		cout << "Title: " << title << ", Price: " << price << ", Stocks available: " << stocks << endl;
-	}
+class Book {
+public:
+    string title;
+    float price;
+    int stocklevel;
+
+    Book() {
+        title = "unknown";
+        price = 0.0;
+        stocklevel = 30;
+    }
+
+    void updateBook(string t, float p, int s) {
+        if (p < 0 || s < 0) {
+            cout << "Error: Price and stock level must be non-negative!" << endl;
+            return;
+        }
+        title = t;
+        price = p;
+        stocklevel = s;
+    }
+
+    void purchaseBook(int quantity) {
+        if (quantity <= stocklevel) {
+            cout << "You have purchased " << quantity << " copies of " << title << endl;
+            stocklevel -= quantity;
+            if (stocklevel < 5) {
+                cout << "Warning! You are low on stock!" << endl;
+            }
+        } else {
+            cout << "Sorry! Insufficient copies available." << endl;
+        }
+    }
+
+    void displayinfo() {
+        cout << "Title: " << title << ", Price: " << price << ", Stock: " << stocklevel << endl;
+    }
 };
 
-int main(){
-	// Initialize books
-	Book books[3];
-	books[0].updatebook("How to C", 50, 10);
-	books[1].updatebook("Rich Dad Poor Dad", 10, 30);
-	books[2].updatebook("Calculus by Anton", 50, 4);
-	
-	int choice;
-	bool running = true;
-	
-	while (running) {
-		cout << "\nSelect a book (1-3) or 0 to exit:" << endl;
-		cout << "1. " << books[0].title << endl;
-		cout << "2. " << books[1].title << endl;
-		cout << "3. " << books[2].title << endl;
-		cout << "0. Exit" << endl;
-		cout << "Enter your choice: ";
-		cin >> choice;
-		
-		if (choice == 0) {
-			cout << "Exiting the program." << endl;
-			running = false;
-		} else if (choice >= 1 && choice <= 3) {
-			int action;
-			cout << "\nSelect an action:" << endl;
-			cout << "1. Purchase" << endl;
-			cout << "2. Update book info" << endl;
-			cout << "3. Display book info" << endl;
-			cout << "Enter your action: ";
-			cin >> action;
-			
-			if (action == 1) {
-				int quantity;
-				cout << "Enter the quantity to purchase: ";
-				cin >> quantity;
-				books[choice - 1].purchase(quantity);
-			} else if (action == 2) {
-				string title;
-				float price;
-				int stocks;
-				cout << "Enter new title: ";
-				cin.ignore();
-				getline(cin, title);
-				cout << "Enter new price: ";
-				cin >> price;
-				cout << "Enter new stock quantity: ";
-				cin >> stocks;
-				books[choice - 1].updatebook(title, price, stocks);
-			} else if (action == 3) {
-				books[choice - 1].displayinfo();
-			} else {
-				cout << "Invalid action!" << endl;
-			}
-		} else {
-			cout << "Invalid book selection!" << endl;
-		}
-	}
-	
-	return 0;
+int main() {
+    Book books[3];
+    books[0].updateBook("How to C", 50, 10);
+    books[1].updateBook("Rich Dad Poor Dad", 10, 30);
+    books[2].updateBook("Calculus by Anton", 50, 4);
+
+    int choice;
+    bool running = true;
+
+    while (running) {
+        cout << "\nSelect a book (1-3) OR 0 to exit:" << endl;
+        for (int i = 0; i < 3; i++) {
+            cout << i + 1 << ". " << books[i].title << endl;
+        }
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        if (choice == 0) {
+            running = false;
+        } else if (choice >= 1 && choice <= 3) {
+            int action;
+            cout << "\nSelect an action (1-Update, 2-Purchase, 3-Display, 0-Exit): ";
+            cin >> action;
+
+            if (action == 1) {
+                string title;
+                float price;
+                int stocklevel;
+                cout << "Enter title: ";
+                cin >> title;
+                cout << "Enter price: ";
+                cin >> price;
+                cout << "Enter stock level: ";
+                cin >> stocklevel;
+                books[choice - 1].updateBook(title, price, stocklevel);
+            } else if (action == 2) {
+                int quantity;
+                cout << "Enter quantity: ";
+                cin >> quantity;
+                books[choice - 1].purchaseBook(quantity);
+            } else if (action == 3) {
+                books[choice - 1].displayinfo();
+            } else {
+                cout << "Invalid action!" << endl;
+            }
+        } else {
+            cout << "Invalid book selection!" << endl;
+        }
+    }
+
+    return 0;
 }
