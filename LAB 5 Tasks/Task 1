@@ -1,0 +1,35 @@
+#include <iostream>
+#include <string>
+using namespace std;
+class Car{
+    string regNumber;
+    string model;
+    string owner;
+public:
+    Car(const string& reg,const string& mod,const string& own){
+        regNumber=reg;
+        model=mod;
+        owner=own;
+    }
+    Car(const Car& other,const string& newOwner){
+        regNumber=other.regNumber;
+        model=other.model;
+        owner=newOwner;
+    }
+    void display()const{
+        cout<<"Registration number: "<<regNumber<<endl;
+        cout<<"Model: "<<model<<endl;
+        cout<<"Owner: "<<owner<<endl;
+    }
+};
+int main(){
+    Car car1("ABC-123","Toyota Aqua","Ali");
+    Car car2("XYZ-987","Suzuki Cultus","Ahmed");
+    cout<<"Details of car 1 before rental:"<<endl;
+    car1.display();
+    cout<<endl;
+    Car car3=Car(car1,"Shahyan");
+    cout<<"Details of Car 1 after renting out:"<<endl;
+    car3.display();
+    return 0;
+}
