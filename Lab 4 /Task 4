@@ -1,0 +1,139 @@
+#include <iostream>
+using namespace std;
+
+class Book {
+private:
+    string title;
+    double price;
+    int stock;
+    double discountPercentage;
+
+public:
+    Book(string newTitle, double newPrice, int newStock) {
+        title = newTitle;
+        price = newPrice;
+        stock = newStock;
+        discountPercentage = 0.0;
+    }
+
+    Book(const Book &other) {
+        title = other.title;
+        price = other.price;
+        stock = other.stock;
+        discountPercentage = other.discountPercentage;
+        cout << "Book object copied!" << endl;
+    }
+
+    ~Book() {
+        cout << "Book object destroyed!" << endl;
+    }
+
+    void applyBulkPurchaseDiscount(int quantity) {
+        if (quantity > 10) {
+            discountPercentage = 0.10;  
+        } else if (quantity > 5) {
+            discountPercentage = 0.05;  
+        } else {
+            discountPercentage = 0.0;  
+        }
+    }
+
+    void updatePrice() {
+        double discountAmount = (this->price * this->discountPercentage);
+        this->price -= discountAmount;
+    }
+
+    void purchaseBook(int quantity) {
+        if (quantity > stock) {
+            cout << "Error: Only " << stock << " copies available!" << endl;
+        } else {
+            stock -= quantity;
+            applyBulkPurchaseDiscount(quantity);
+            updatePrice();
+            if (stock < 0) stock = 0;
+            if (stock < 5) {
+                cout << "Low stock warning!" << endl;
+            }
+        }
+    }
+
+    void updateDetails(string newTitle, double newPrice, int newStock) {
+        title = newTitle;
+        price = newPrice;
+        stock = newStock;
+    }
+
+    void displayDetails() const {
+        cout << "Title: " << title << endl;
+        cout << "Price: " << price << endl;
+        cout << "Stock: " << stock << endl;
+    }
+};
+
+int main() {
+    string title;
+    double price;
+    int stock, quantity, choice;
+
+    cout << "Enter book details to create a new book object:\n";
+    cout << "Enter book title: ";
+    cin.ignore();  
+    getline(cin, title);
+    cout << "Enter book price: ";
+    cin >> price;
+    cout << "Enter stock quantity: ";
+    cin >> stock;
+
+    Book book1(title, price, stock);
+
+    while (true) {
+        cout << "\nBookstore Management System\n";
+        cout << "1. Display Book Details\n";
+        cout << "2. Update Book Details\n";
+        cout << "3. Purchase Book\n";
+        cout << "4. Create a Copy of the Book\n";
+        cout << "5. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                book1.displayDetails();
+                break;
+
+            case 2:
+                cout << "Enter new book title: ";
+                cin.ignore();  
+                getline(cin, title);
+                cout << "Enter new price: ";
+                cin >> price;
+                cout << "Enter new stock quantity: ";
+                cin >> stock;
+                book1.updateDetails(title, price, stock);
+                cout << "Book details updated!" << endl;
+                break;
+
+            case 3:
+                cout << "Enter quantity to purchase: ";
+                cin >> quantity;
+                book1.purchaseBook(quantity);
+                break;
+
+            case 4: {
+                Book book2 = book1;  
+                cout << "Copied Book Details:\n";
+                book2.displayDetails();
+                break;
+            }
+
+            case 5:
+                cout << "Exiting the system.\n";
+                return 0;
+
+            default:
+                cout << "Invalid choice! Please try again.\n";
+        }
+    }
+
+    return 0;
+}
