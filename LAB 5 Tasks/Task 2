@@ -1,0 +1,50 @@
+#include <iostream>
+#include <string>
+using namespace std;
+class Patient {
+    int ID;
+    string name;
+    int numtests;
+    int* testresults;
+public:
+    Patient(int i, string n, int* t, int num) {
+        ID = i;
+        name = n;
+        numtests = num;
+        testresults = new int[numtests];
+        for (int i = 0; i < numtests; i++) {
+            testresults[i] = t[i];
+        }
+    }
+    Patient(Patient& other) {
+        ID = other.ID;
+        name = other.name;
+        numtests = other.numtests;
+        testresults = new int[numtests];
+        for (int i = 0; i < numtests; i++) {
+            testresults[i] = other.testresults[i];
+        }
+    }
+    ~Patient() {
+        delete[] testresults;
+    }
+    void display() const {
+        cout << "Patient ID: " << ID << endl;
+        cout << "Name: " << name << endl;
+        cout << "Test Results: ";
+        for (int i = 0; i < numtests; ++i) {
+            cout << testresults[i] << " ";
+        }
+        cout << endl;
+    }
+};
+int main() {
+    int testResults1[] = {100, 95, 85};
+    Patient patient1(1, "John Doe", testResults1, 3);
+    cout << "Original Patient Details:" << endl;
+    patient1.display();
+    Patient patient2 = patient1;
+    cout << "\nCopied Patient Details:" << endl;
+    patient2.display();
+    return 0;
+}
