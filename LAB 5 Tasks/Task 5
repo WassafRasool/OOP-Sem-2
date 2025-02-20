@@ -1,0 +1,104 @@
+#include <iostream>
+#include <string>
+using namespace std;
+class TourGuide {
+public:
+    string name;
+    int yearsOfExperience;
+    string specialization;
+    TourGuide(string name, int yearsOfExperience, string specialization) {
+        this->name = name;
+        this->yearsOfExperience = yearsOfExperience;
+        this->specialization = specialization;
+    }
+    void displayDetails() {
+        cout << "Name: " << name << endl;
+        cout << "Years of Experience: " << yearsOfExperience << endl;
+        cout << "Specialization: " << specialization << endl;
+    }
+};
+class TravelAgency {
+private:
+    TourGuide** tourGuides;
+    int guideCount;
+public:
+    TravelAgency() {
+        tourGuides = nullptr;
+        guideCount = 0;
+    }
+    TourGuide* addTourGuide(string name, int yearsOfExperience, string specialization) {
+        TourGuide* newGuide = new TourGuide(name, yearsOfExperience, specialization);
+        return newGuide;
+    }
+    void hireTourGuide(TourGuide* guide) {
+        TourGuide** temp = new TourGuide*[guideCount + 1];
+        for (int i = 0; i < guideCount; i++) {
+            temp[i] = tourGuides[i];
+        }
+        temp[guideCount] = guide;
+        delete[] tourGuides;
+        tourGuides = temp;
+        guideCount++;
+    }
+    void displayDetails() {
+        cout << "Travel Agency has " << guideCount << " tour guides." << endl;
+        for (int i = 0; i < guideCount; i++) {
+            cout << "\nTour Guide " << i + 1 << " details:" << endl;
+            tourGuides[i]->displayDetails();
+        }
+    }
+    ~TravelAgency() {
+        for (int i = 0; i < guideCount; i++) {
+            delete tourGuides[i];
+        }
+        delete[] tourGuides;
+    }
+};
+int main() {
+    TravelAgency agency;
+    int choice;
+    TourGuide* tempGuide = nullptr;
+    do {
+        cout << "\n1. Add a Tour Guide" << endl;
+        cout << "2. Hire a Tour Guide" << endl;
+        cout << "3. Display Travel Agency Details" << endl;
+        cout << "4. Exit" << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+        cin.ignore();
+        switch (choice) {
+            case 1: {
+                string name, specialization;
+                int yearsOfExperience;
+                cout << "Enter the name of the tour guide: ";
+                getline(cin, name);
+                cout << "Enter years of experience: ";
+                cin >> yearsOfExperience;
+                cin.ignore();
+                cout << "Enter specialization: ";
+                getline(cin, specialization);
+                tempGuide = agency.addTourGuide(name, yearsOfExperience, specialization);
+                cout << "Tour guide has been added, but not hired yet." << endl;
+                break;
+            }
+            case 2:
+                if (tempGuide != nullptr) {
+                    agency.hireTourGuide(tempGuide);
+                    tempGuide = nullptr;
+                    cout << "Tour guide has been hired!" << endl;
+                } else {
+                    cout << "No tour guide has been added yet. Please add one first." << endl;
+                }
+                break;
+            case 3:
+                agency.displayDetails();
+                break;
+            case 4:
+                cout << "Exiting program." << endl;
+                break;
+            default:
+                cout << "Invalid choice. Please try again." << endl;
+        }
+    } while (choice != 4);
+    return 0;
+}
