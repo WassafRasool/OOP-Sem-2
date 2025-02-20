@@ -1,0 +1,104 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+
+class Product {
+public:
+    int id;
+    std::string name;
+    double price;
+
+    Product(int id, std::string name, double price) 
+        : id(id), name(name), price(price) {}
+};
+
+class Inventory {
+private:
+    std::vector<Product> products;
+
+public:
+    void addProduct(int id, std::string name, double price) {
+        products.push_back(Product(id, name, price));
+    }
+
+    void sortProductsByPrice() {
+        std::sort(products.begin(), products.end(), [](const Product& a, const Product& b) {
+            return a.price < b.price;
+        });
+    }
+
+    void searchProductByName(const std::string& name) {
+        auto it = std::find_if(products.begin(), products.end(), [&name](const Product& product) {
+            return product.name == name;
+        });
+
+        if (it != products.end()) {
+            std::cout << "Product found: ID = " << it->id << ", Name = " << it->name << ", Price = " << it->price << std::endl;
+        } else {
+            std::cout << "Product not found" << std::endl;
+        }
+    }
+
+    void displayProducts() {
+        std::cout << "Product List: " << std::endl;
+        for (const auto& product : products) {
+            std::cout << "ID: " << product.id << ", Name: " << product.name << ", Price: " << product.price << std::endl;
+        }
+    }
+};
+
+int main() {
+    Inventory inventory;
+    int choice;
+
+    do {
+        std::cout << "\nInventory Management System\n";
+        std::cout << "1. Add Product\n";
+        std::cout << "2. Sort Products by Price\n";
+        std::cout << "3. Search Product by Name\n";
+        std::cout << "4. Display All Products\n";
+        std::cout << "5. Exit\n";
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1: {
+                int id;
+                std::string name;
+                double price;
+                std::cout << "Enter Product ID: ";
+                std::cin >> id;
+                std::cin.ignore();
+                std::cout << "Enter Product Name: ";
+                std::getline(std::cin, name);
+                std::cout << "Enter Product Price: ";
+                std::cin >> price;
+                inventory.addProduct(id, name, price);
+                break;
+            }
+            case 2:
+                inventory.sortProductsByPrice();
+                std::cout << "Products sorted by price." << std::endl;
+                break;
+            case 3: {
+                std::string name;
+                std::cin.ignore();
+                std::cout << "Enter Product Name to Search: ";
+                std::getline(std::cin, name);
+                inventory.searchProductByName(name);
+                break;
+            }
+            case 4:
+                inventory.displayProducts();
+                break;
+            case 5:
+                std::cout << "Exiting..." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != 5);
+
+    return 0;
+}
