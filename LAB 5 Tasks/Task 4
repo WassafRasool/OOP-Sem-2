@@ -1,0 +1,57 @@
+#include <iostream>
+#include <string>
+using namespace std;
+class Battery {
+public:
+    int capacity;
+    Battery(int capacity) {
+        this->capacity = capacity;
+    }
+    void displayBatteryDetails() {
+        cout << "Battery Capacity: " << capacity << " mAh" << endl;
+    }
+};
+class Smartphone {
+private:
+    string brand;
+    string model;
+    Battery* battery;
+public:
+    Smartphone(string brand, string model, Battery* battery = nullptr) {
+        this->brand = brand;
+        this->model = model;
+        this->battery = battery;
+    }
+    void displaySmartphoneDetails() {
+        cout << "Smartphone Brand: " << brand << endl;
+        cout << "Smartphone Model: " << model << endl;
+        if (battery) {
+            battery->displayBatteryDetails();
+        } else {
+            cout << "This smartphone does not come with a battery." << endl;
+        }
+    }
+};
+int main() {
+    string brand, model;
+    int batteryCapacity;
+    char hasBattery;
+    cout << "Enter smartphone brand: ";
+    getline(cin, brand);
+    cout << "Enter smartphone model: ";
+    getline(cin, model);
+    cout << "Does the smartphone come with a battery? (y/n): ";
+    cin >> hasBattery;
+    Battery* battery = nullptr;
+    if (hasBattery == 'y' || hasBattery == 'Y') {
+        cout << "Enter battery capacity (in mAh): ";
+        cin >> batteryCapacity;
+        battery = new Battery(batteryCapacity);
+    }
+    Smartphone smartphone(brand, model, battery);
+    smartphone.displaySmartphoneDetails();
+    if (battery) {
+        delete battery;
+    }
+    return 0;
+}
