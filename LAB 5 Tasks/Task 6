@@ -1,0 +1,115 @@
+#include <iostream>
+#include <string>
+using namespace std;
+class Movie {
+public:
+    string title;
+    string director;
+    int duration;
+    Movie(string title, string director, int duration) {
+        this->title = title;
+        this->director = director;
+        this->duration = duration;
+    }
+    void displayDetails() {
+        cout << "Title: " << title << endl;
+        cout << "Director: " << director << endl;
+        cout << "Duration: " << duration << " minutes" << endl;
+    }
+};
+class CinemaHall {
+private:
+    Movie** movies;
+    int movieCount;
+public:
+    CinemaHall() {
+        movies = nullptr;
+        movieCount = 0;
+    }
+    void addMovie(string title, string director, int duration) {
+        if (duration <= 0) {
+            cout << "Invalid duration! Movie duration must be greater than zero." << endl;
+            return;
+        }
+        Movie* newMovie = new Movie(title, director, duration);
+        Movie** temp = new Movie*[movieCount + 1];
+        for (int i = 0; i < movieCount; i++) {
+            temp[i] = movies[i];
+        }
+        temp[movieCount] = newMovie;
+        delete[] movies;
+        movies = temp;
+        movieCount++;
+    }
+    void displayDetails() {
+        cout << "\nCinema Hall currently showing " << movieCount << " movie(s)." << endl;
+        for (int i = 0; i < movieCount; i++) {
+            cout << "\nMovie " << i + 1 << " details:" << endl;
+            movies[i]->displayDetails();
+        }
+    }
+    ~CinemaHall() {
+        for (int i = 0; i < movieCount; i++) {
+            delete movies[i];
+        }
+        delete[] movies;
+    }
+};
+int main() {
+    CinemaHall* halls[3];
+    for (int i = 0; i < 3; i++) {
+        halls[i] = new CinemaHall();
+    }
+    int choice;
+    int hallChoice;
+    do {
+        cout << "\nMenu:" << endl;
+        cout << "1. Add a Movie to a Cinema Hall" << endl;
+        cout << "2. Display Cinema Hall Details" << endl;
+        cout << "3. Exit" << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+        cin.ignore();
+        switch (choice) {
+            case 1: {
+                string title, director;
+                int duration;
+                cout << "Choose a cinema hall (1-3): ";
+                cin >> hallChoice;
+                cin.ignore();
+                if (hallChoice < 1 || hallChoice > 3) {
+                    cout << "Invalid Cinema Hall number! Please try again." << endl;
+                    break;
+                }
+                cout << "Enter the movie title: ";
+                getline(cin, title);
+                cout << "Enter the director's name: ";
+                getline(cin, director);
+                cout << "Enter the duration of the movie (in minutes): ";
+                cin >> duration;
+                halls[hallChoice - 1]->addMovie(title, director, duration);
+                cout << "Movie added successfully!" << endl;
+                break;
+            }
+            case 2:
+                cout << "Choose a cinema hall (1-3): ";
+                cin >> hallChoice;
+                cin.ignore();
+                if (hallChoice < 1 || hallChoice > 3) {
+                    cout << "Invalid Cinema Hall number! Please try again." << endl;
+                    break;
+                }
+                halls[hallChoice - 1]->displayDetails();
+                break;
+            case 3:
+                cout << "Exiting program." << endl;
+                for (int i = 0; i < 3; i++) {
+                    delete halls[i];
+                }
+                break;
+            default:
+                cout << "Invalid choice. Please try again." << endl;
+        }
+    } while (choice != 3);
+    return 0;
+}
