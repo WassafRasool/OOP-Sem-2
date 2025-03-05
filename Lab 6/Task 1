@@ -1,0 +1,43 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Employee {
+public:
+    string name;
+    float salary;
+
+    Employee(string name, float salary) {
+        this->name = name;
+        this->salary = salary;
+    }
+
+    void displaydetailsofemployee() {
+        cout << "Name: " << name << endl;
+        cout << "Salary: " << salary << endl;
+    }
+};
+
+class Manager : public Employee {
+public:
+    float bonus;
+
+    Manager(string name, float salary, float bonus) : Employee(name, salary) {
+        this->bonus = bonus;
+    }
+
+    void displaydetailsofmanager() {
+        displaydetailsofemployee();
+        cout << "Bonus: " << bonus << endl;
+    }
+};
+
+int main() {
+    Employee e1("Ali", 15000);
+    Manager m1("Wassaf", 20000, 5000);
+
+    e1.displaydetailsofemployee();
+    m1.displaydetailsofmanager();
+
+    return 0;
+}
