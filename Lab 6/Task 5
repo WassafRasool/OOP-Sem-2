@@ -1,0 +1,67 @@
+#include <iostream>
+using namespace std;
+
+class device{
+	public:
+	int deviceID;
+	bool status;
+	
+	device(int deviceID, bool status){
+		this->deviceID = deviceID;
+		this->status = status;
+	}
+	
+	void displaydetails(){
+		cout << "Device ID: " << deviceID << endl;
+		cout << "Device Status: " << status << endl;
+	}
+};
+
+class smartphone:virtual public device{
+	public:
+		float screensize;
+		
+		smartphone(int deviceID, bool status, float screensize):device(deviceID, status){
+			this->screensize = screensize;
+		}
+		
+		void displaydetails(){
+			cout << "Screen size of device: " << screensize << endl;
+		}
+};
+
+class smartwatch:virtual public device{
+	public:
+		bool heartRateMonitor;
+		
+		smartwatch(int deviceID, bool status, bool heartRateMonitor):device(deviceID, status){
+			this->heartRateMonitor = heartRateMonitor;
+		}
+		
+		void displaydetails(){
+			cout << "Heart rate monitor: " << heartRateMonitor << endl;
+		}
+};
+
+class smartwearable:public smartphone, public smartwatch{
+	public:
+	int stepcounter;
+	
+	smartwearable(int deviceID, bool status, float screensize, bool heartRateMonitor, int stepcounter):device(deviceID, status), smartphone(deviceID, status, screensize), smartwatch(deviceID, status, heartRateMonitor){
+		this->stepcounter = stepcounter;
+	}	
+	
+	void displaydetails(){
+		device::displaydetails();
+		smartphone::displaydetails();
+		smartwatch::displaydetails();
+		cout << "Step counter: " << stepcounter << endl;
+	}
+};
+
+int main(){
+	smartwearable s1(1010, true, 2.2, false, 505);
+	s1.displaydetails();
+	
+	return 0;
+}
