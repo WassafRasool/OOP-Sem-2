@@ -1,0 +1,60 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class account{
+	public:
+	int accnum;
+	float balance;
+	
+	account(int accnum, float balance){
+		this->accnum = accnum;
+		this->balance = balance;
+	}
+	
+	void displaydetails(){
+		cout << "Account Number: " << accnum << endl;
+		cout << "Balance: " << balance << endl;
+	}
+};
+
+class savingsAccount:public account{
+	public:
+		float interestRate;
+		
+		savingsAccount(int accnum, float balance, float interestRate):account(accnum, balance){
+			this->interestRate = interestRate;
+		}
+		
+		void displaydetails(){
+			account::displaydetails();
+			cout << "Interest rate: " << interestRate << endl;
+		}
+};
+
+class checkingAccount:public account{
+	public:
+		float overdraftlimit;
+		
+		checkingAccount(int accnum, float balance, float overdraftlimit):account(accnum, balance){
+			this->overdraftlimit = overdraftlimit;
+		}
+		
+		void displaydetails(){
+			account::displaydetails();
+			cout << "Over draft limit: " << overdraftlimit << endl;
+		}
+};
+
+int main(){
+	account a1(101010, 50000);
+	a1.displaydetails();
+	cout << "-------------------------" << endl;
+	savingsAccount s1(202020, 25000, 10);
+	s1.displaydetails();
+	cout << "-------------------------" << endl;
+	checkingAccount c1(303030, 20000, 50000);
+	c1.displaydetails();
+	
+	return 0;
+}
