@@ -1,0 +1,133 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Person {
+protected:
+    string name;
+    string id;
+    string address;
+    string phoneNumber;
+    string email;
+
+public:
+    Person(const string& n, const string& i, const string& addr, const string& phone, const string& mail)
+        : name(n), id(i), address(addr), phoneNumber(phone), email(mail) {}
+
+    virtual void displayInfo() const {
+        cout << "Name: " << name << endl;
+        cout << "ID: " << id << endl;
+        cout << "Address: " << address << endl;
+        cout << "Phone Number: " << phoneNumber << endl;
+        cout << "Email: " << email << endl;
+    }
+
+    virtual void updateInfo(const string& addr, const string& phone, const string& mail) {
+        address = addr;
+        phoneNumber = phone;
+        email = mail;
+    }
+
+    virtual ~Person() {}
+};
+
+class Student : public Person {
+private:
+    string coursesEnrolled;
+    double GPA;
+    int enrollmentYear;
+
+public:
+    Student(const string& n, const string& i, const string& addr, const string& phone, const string& mail, const string& courses, double gpa, int year)
+        : Person(n, i, addr, phone, mail), coursesEnrolled(courses), GPA(gpa), enrollmentYear(year) {}
+
+    void displayInfo() const override {
+        Person::displayInfo();
+        cout << "Courses Enrolled: " << coursesEnrolled << endl;
+        cout << "GPA: " << GPA << endl;
+        cout << "Enrollment Year: " << enrollmentYear << endl;
+    }
+};
+
+class Professor : public Person {
+private:
+    string department;
+    string coursesTaught;
+    double salary;
+
+public:
+    Professor(const string& n, const string& i, const string& addr, const string& phone, const string& mail, const string& dept, const string& courses, double sal)
+        : Person(n, i, addr, phone, mail), department(dept), coursesTaught(courses), salary(sal) {}
+
+    void displayInfo() const override {
+        Person::displayInfo();
+        cout << "Department: " << department << endl;
+        cout << "Courses Taught: " << coursesTaught << endl;
+        cout << "Salary: " << salary << endl;
+    }
+};
+
+class Staff : public Person {
+private:
+    string department;
+    string position;
+    double salary;
+
+public:
+    Staff(const string& n, const string& i, const string& addr, const string& phone, const string& mail, const string& dept, const string& pos, double sal)
+        : Person(n, i, addr, phone, mail), department(dept), position(pos), salary(sal) {}
+
+    void displayInfo() const override {
+        Person::displayInfo();
+        cout << "Department: " << department << endl;
+        cout << "Position: " << position << endl;
+        cout << "Salary: " << salary << endl;
+    }
+};
+
+class Course {
+private:
+    string courseId;
+    string courseName;
+    int credits;
+    string instructor;
+    string schedule;
+
+public:
+    Course(const string& id, const string& name, int creds, const string& instr, const string& sched)
+        : courseId(id), courseName(name), credits(creds), instructor(instr), schedule(sched) {}
+
+    void registerStudent(const Student& student) {
+        cout << "Registering " << student.getName() << " to course " << courseName << endl;
+    }
+
+    void calculateGrades() {
+        // Implementation for grade calculation
+    }
+
+    void displayCourseInfo() const {
+        cout << "Course ID: " << courseId << endl;
+        cout << "Course Name: " << courseName << endl;
+        cout << "Credits: " << credits << endl;
+        cout << "Instructor: " << instructor << endl;
+        cout << "Schedule: " << schedule << endl;
+    }
+};
+
+int main() {
+    Student student("John Doe", "S12345", "123 Main St", "555-1234", "john.doe@example.com", "Math, Science", 3.8, 2023);
+    Professor professor("Dr. Smith", "P54321", "456 Elm St", "555-5678", "dr.smith@example.com", "Physics", "Physics 101, Quantum Mechanics", 95000);
+    Staff staff("Jane Roe", "ST67890", "789 Oak St", "555-8765", "jane.roe@example.com", "Administration", "Manager", 60000);
+    Course course("CSE101", "Introduction to Computer Science", 4, "Dr. Smith", "MWF 10-11 AM");
+
+    student.displayInfo();
+    cout << endl;
+    professor.displayInfo();
+    cout << endl;
+    staff.displayInfo();
+    cout << endl;
+    course.displayCourseInfo();
+
+    return 0;
+}
