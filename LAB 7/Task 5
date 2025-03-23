@@ -1,0 +1,152 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Media {
+protected:
+    string title;
+    string publicationDate;
+    string uniqueID;
+    string publisher;
+
+public:
+    Media(const string& t, const string& pubDate, const string& id, const string& pub)
+        : title(t), publicationDate(pubDate), uniqueID(id), publisher(pub) {}
+
+    virtual void displayInfo() const {
+        cout << "Title: " << title << endl;
+        cout << "Publication Date: " << publicationDate << endl;
+        cout << "Unique ID: " << uniqueID << endl;
+        cout << "Publisher: " << publisher << endl;
+    }
+
+    virtual void checkOut() {
+        cout << "Checked out: " << title << endl;
+    }
+
+    virtual void returnItem() {
+        cout << "Returned: " << title << endl;
+    }
+
+    virtual ~Media() {}
+};
+
+class Book : public Media {
+private:
+    string author;
+    string ISBN;
+    int numberOfPages;
+
+public:
+    Book(const string& t, const string& pubDate, const string& id, const string& pub, const string& auth, const string& isbn, int pages)
+        : Media(t, pubDate, id, pub), author(auth), ISBN(isbn), numberOfPages(pages) {}
+
+    void displayInfo() const override {
+        Media::displayInfo();
+        cout << "Author: " << author << endl;
+        cout << "ISBN: " << ISBN << endl;
+        cout << "Number of Pages: " << numberOfPages << endl;
+    }
+};
+
+class DVD : public Media {
+private:
+    string director;
+    double duration;
+    string rating;
+
+public:
+    DVD(const string& t, const string& pubDate, const string& id, const string& pub, const string& dir, double dur, const string& rate)
+        : Media(t, pubDate, id, pub), director(dir), duration(dur), rating(rate) {}
+
+    void displayInfo() const override {
+        Media::displayInfo();
+        cout << "Director: " << director << endl;
+        cout << "Duration: " << duration << " minutes" << endl;
+        cout << "Rating: " << rating << endl;
+    }
+};
+
+class CD : public Media {
+private:
+    string artist;
+    int numberOfTracks;
+    string genre;
+
+public:
+    CD(const string& t, const string& pubDate, const string& id, const string& pub, const string& art, int tracks, const string& gen)
+        : Media(t, pubDate, id, pub), artist(art), numberOfTracks(tracks), genre(gen) {}
+
+    void displayInfo() const override {
+        Media::displayInfo();
+        cout << "Artist: " << artist << endl;
+        cout << "Number of Tracks: " << numberOfTracks << endl;
+        cout << "Genre: " << genre << endl;
+    }
+};
+
+class Magazine : public Media {
+private:
+    int issueNumber;
+
+public:
+    Magazine(const string& t, const string& pubDate, const string& id, const string& pub, int issueNum)
+        : Media(t, pubDate, id, pub), issueNumber(issueNum) {}
+
+    void displayInfo() const override {
+        Media::displayInfo();
+        cout << "Issue Number: " << issueNumber << endl;
+    }
+};
+
+void searchByTitle(const Media* media[], int size, const string& title) {
+    for (int i = 0; i < size; ++i) {
+        if (media[i]->getTitle() == title) {
+            media[i]->displayInfo();
+        }
+    }
+}
+
+void searchByAuthor(const Media* media[], int size, const string& author) {
+    for (int i = 0; i < size; ++i) {
+        const Book* book = dynamic_cast<const Book*>(media[i]);
+        if (book && book->getAuthor() == author) {
+            book->displayInfo();
+        }
+    }
+}
+
+void searchByPublicationYear(const Media* media[], int size, const string& year) {
+    for (int i = 0; i < size; ++i) {
+        if (media[i]->getPublicationDate().substr(0, 4) == year) {
+            media[i]->displayInfo();
+        }
+    }
+}
+
+int main() {
+    Book book("The Great Gatsby", "1925-04-10", "B1001", "Charles Scribner's Sons", "F. Scott Fitzgerald", "9780743273565", 180);
+    DVD dvd("Inception", "2010-07-16", "D2001", "Warner Bros.", "Christopher Nolan", 148, "PG-13");
+    CD cd("Thriller", "1982-11-30", "C3001", "Epic Records", "Michael Jackson", 9, "Pop");
+    Magazine magazine("National Geographic", "2023-03-01", "M4001", "National Geographic Society", 128);
+
+    Media* library[4] = { &book, &dvd, &cd, &magazine };
+
+    cout << "Displaying all media information:" << endl;
+    for (int i = 0; i < 4; ++i) {
+        library[i]->displayInfo();
+        cout << endl;
+    }
+
+    cout << "Searching for media by title 'Inception':" << endl;
+    searchByTitle(library, 4, "Inception");
+
+    cout << "Searching for books by author 'F. Scott Fitzgerald':" << endl;
+    searchByAuthor(library, 4, "F. Scott Fitzgerald");
+
+    cout << "Searching for media by publication year '1982':" << endl;
+    searchByPublicationYear(library, 4, "1982");
+
+    return 0;
+}
