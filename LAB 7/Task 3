@@ -1,0 +1,91 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Currency {
+protected:
+    double amount;
+    string currencyCode;
+    string currencySymbol;
+    double exchangeRate;
+
+public:
+    Currency(double amt, const string& code, const string& symbol, double rate = 1.0)
+        : amount(amt), currencyCode(code), currencySymbol(symbol), exchangeRate(rate) {}
+
+    virtual double convertToBase() const {
+        return amount * exchangeRate;
+    }
+
+    virtual double convertTo(const Currency& targetCurrency) const {
+        double baseAmount = convertToBase();
+        return baseAmount / targetCurrency.exchangeRate;
+    }
+
+    virtual void displayCurrency() const {
+        cout << currencySymbol << " " << amount << " (" << currencyCode << ")" << endl;
+    }
+
+    virtual ~Currency() {}
+};
+
+class Dollar : public Currency {
+public:
+    Dollar(double amt, double rate = 1.0)
+        : Currency(amt, "USD", "$", rate) {}
+
+    void displayCurrency() const override {
+        cout << "$ " << amount << " (USD)" << endl;
+    }
+
+    double convertToBase() const override {
+        return amount * exchangeRate;
+    }
+};
+
+class Euro : public Currency {
+public:
+    Euro(double amt, double rate = 0.85)
+        : Currency(amt, "EUR", "€", rate) {}
+
+    void displayCurrency() const override {
+        cout << "€ " << amount << " (EUR)" << endl;
+    }
+
+    double convertToBase() const override {
+        return amount * exchangeRate;
+    }
+};
+
+class Rupee : public Currency {
+public:
+    Rupee(double amt, double rate = 75.0)
+        : Currency(amt, "INR", "₹", rate) {}
+
+    void displayCurrency() const override {
+        cout << "₹ " << amount << " (INR)" << endl;
+    }
+
+    double convertToBase() const override {
+        return amount * exchangeRate;
+    }
+};
+
+int main() {
+    Dollar dollar(100);
+    Euro euro(85);
+    Rupee rupee(7500);
+
+    dollar.displayCurrency();
+    euro.displayCurrency();
+    rupee.displayCurrency();
+
+    cout << endl;
+
+    cout << "$100 to EUR: €" << dollar.convertTo(euro) << endl;
+    cout << "€85 to INR: ₹" << euro.convertTo(rupee) << endl;
+    cout << "₹7500 to USD: $" << rupee.convertTo(dollar) << endl;
+
+    return 0;
+}
