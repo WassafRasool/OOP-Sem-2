@@ -1,0 +1,104 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Currency {
+private:
+    float amount;
+public:
+    Currency(float a = 0.0) {
+        amount = a;
+    }
+
+    Currency operator+(const Currency& other) const {
+        return Currency(amount + other.amount);
+    }
+
+    Currency operator-(const Currency& other) const {
+        return Currency(amount - other.amount);
+    }
+
+    Currency operator-() const {
+        return Currency(-amount);
+    }
+
+    Currency& operator+=(const Currency& other) {
+        amount += other.amount;
+        return *this;
+    }
+
+    Currency& operator-=(const Currency& other) {
+        amount -= other.amount;
+        return *this;
+    }
+
+    friend ostream& operator<<(ostream& out, const Currency& c) {
+        out << "$" << c.amount;
+        return out;
+    }
+};
+
+class Fraction {
+private:
+    int num, den;
+
+public:
+    Fraction(int n = 0, int d = 1) {
+        num = n;
+        den = d;
+    }
+
+    Fraction operator+(const Fraction& f) const {
+        return Fraction(num * f.den + f.num * den, den * f.den);
+    }
+
+    Fraction operator-(const Fraction& f) const {
+        return Fraction(num * f.den - f.num * den, den * f.den);
+    }
+
+    Fraction operator*(const Fraction& f) const {
+        return Fraction(num * f.num, den * f.den);
+    }
+
+    Fraction operator/(const Fraction& f) const {
+        return Fraction(num * f.den, den * f.num);
+    }
+
+    friend ostream& operator<<(ostream& out, const Fraction& f) {
+        out << f.num << "/" << f.den;
+        return out;
+    }
+};
+
+int main() {
+    Currency c1(150.0), c2(35.5);
+
+    cout << "Currency Values:\n";
+    cout << "c1: " << c1 << "\nc2: " << c2 << endl;
+
+    Currency total = c1 + c2;
+    Currency remaining = c1 - c2;
+    Currency discounted = c1;
+    discounted -= Currency(25.0);
+
+    cout << "\nAfter Addition: " << total << endl;
+    cout << "After Subtraction: " << remaining << endl;
+    cout << "After $25 Discount on c1: " << discounted << endl;
+
+    Fraction f1(2, 3), f2(3, 4);
+
+    cout << "\nFraction Values:\n";
+    cout << "f1: " << f1 << "\nf2: " << f2 << endl;
+
+    Fraction fAdd = f1 + f2;
+    Fraction fSub = f1 - f2;
+    Fraction fMul = f1 * f2;
+    Fraction fDiv = f1 / f2;
+
+    cout << "\nAddition: " << fAdd << endl;
+    cout << "Subtraction: " << fSub << endl;
+    cout << "Multiplication: " << fMul << endl;
+    cout << "Division: " << fDiv << endl;
+
+    return 0;
+}
