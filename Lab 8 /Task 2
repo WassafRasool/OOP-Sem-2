@@ -1,0 +1,42 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Librarian; 
+
+class Book {
+private:
+    string title;
+    float price;
+public:
+    Book(string t, float p) {
+        title = t;
+        price = p;
+    }
+    friend class Librarian;
+};
+
+class Librarian {
+public:
+    void displayBookDetails(Book b) {
+        cout << "Title: " << b.title << endl;
+        cout << "Price: $" << b.price << endl;
+    }
+    void applyDiscount(Book &b, float percentage) {
+        float discountAmount = b.price * (percentage / 100);
+        b.price -= discountAmount;
+        cout << "Applied " << percentage << "% discount." << endl;
+    }
+};
+
+int main() {
+    Book myBook("The Great Gatsby", 50.0);
+    Librarian manager;
+
+    cout << "Before Discount:" << endl;
+    manager.displayBookDetails(myBook);
+    manager.applyDiscount(myBook, 20); 
+    cout << "\nAfter Discount:" << endl;
+    manager.displayBookDetails(myBook);
+    return 0;
+}
