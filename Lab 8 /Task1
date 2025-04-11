@@ -1,0 +1,42 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Humidity; 
+
+class Temperature {
+private:
+    float tempCelsius;
+public:
+    Temperature(float t) {
+        tempCelsius = t;
+    }
+    friend float calculateHeatIndex(Temperature t, Humidity h);
+};
+
+class Humidity {
+private:
+    float humidityPercent;
+public:
+    Humidity(float h) {
+        humidityPercent = h;
+    }
+
+    friend float calculateHeatIndex(Temperature t, Humidity h);
+};
+
+float calculateHeatIndex(Temperature t, Humidity h) {
+    float T = t.tempCelsius;
+    float R = h.humidityPercent;
+    float heatIndex = T + 0.33 * R - 0.7;
+    return heatIndex;
+}
+
+int main() {
+    Temperature temp(32);    
+    Humidity hum(70);        
+
+    float index = calculateHeatIndex(temp, hum);
+    cout << "Heat Index: " << index << "°C" << endl;
+    return 0;
+}
