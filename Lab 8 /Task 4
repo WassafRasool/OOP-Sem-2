@@ -1,0 +1,69 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Currency {
+private:
+    float amount;
+public:
+    Currency(float a = 0.0) {
+        amount = a;
+    }
+
+    Currency operator+(const Currency& other) const {
+        return Currency(amount + other.amount);
+    }
+
+    Currency operator-(const Currency& other) const {
+        return Currency(amount - other.amount);
+    }
+
+    Currency operator-() const {
+        return Currency(-amount);
+    }
+
+    Currency& operator+=(const Currency& other) {
+        amount += other.amount;
+        return *this;
+    }
+
+    Currency& operator-=(const Currency& other) {
+        amount -= other.amount;
+        return *this;
+    }
+
+    void display() const {
+        cout << "Amount: $" << amount << endl;
+    }
+};
+
+int main() {
+    Currency c1(100.50);
+    Currency c2(50.25);
+
+    cout << "Initial Values:" << endl;
+    c1.display();
+    c2.display();
+
+    Currency sum = c1 + c2;
+    cout << "\nAfter Addition (c1 + c2):" << endl;
+    sum.display();
+
+    Currency diff = c1 - c2;
+    cout << "\nAfter Subtraction (c1 - c2):" << endl;
+    diff.display();
+
+    Currency neg = -c1;
+    cout << "\nUnary Minus (-c1):" << endl;
+    neg.display();
+
+    c1 += c2;
+    cout << "\nAfter c1 += c2:" << endl;
+    c1.display();
+
+    c1 -= c2;
+    cout << "\nAfter c1 -= c2 (back to original):" << endl;
+    c1.display();
+
+    return 0;
+}
