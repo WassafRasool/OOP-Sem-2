@@ -1,0 +1,14 @@
+#include <iostream>
+#include "Book.h"
+using namespace std;
+
+int main() {
+    Book b1("1984", "George Orwell", "978-0451524935");
+
+    cout << "Book Information:\n";
+    cout << "Title: " << b1.getTitle() << endl;
+    cout << "Author: " << b1.getAuthor() << endl;
+    cout << "ISBN: " << b1.getISBN() << endl;
+
+    return 0;
+}
