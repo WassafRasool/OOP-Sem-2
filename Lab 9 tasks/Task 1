@@ -1,0 +1,64 @@
+#include <iostream>
+using namespace std;
+
+class Vehicle {
+protected:
+    string model;
+    double rate;
+
+public:
+    Vehicle(const string& modelName, double dailyRate)
+        : model(modelName), rate(dailyRate) {}
+
+    virtual double getDailyRate() const = 0;
+    virtual void displayDetails() const = 0;
+
+    virtual ~Vehicle() {} 
+};
+
+class Car : public Vehicle {
+public:
+    Car(const string& modelName, double dailyRate)
+        : Vehicle(modelName, dailyRate) {}
+
+    double getDailyRate() const override {
+        return rate;
+    }
+
+    void displayDetails() const override {
+        cout << "Car Model: " << model << endl;
+        cout << "Daily Rate: $" << getDailyRate() << endl;
+    }
+};
+
+class Bike : public Vehicle {
+public:
+    Bike(const string& modelName, double dailyRate)
+        : Vehicle(modelName, dailyRate) {}
+
+    double getDailyRate() const override {
+        return rate;
+    }
+
+    void displayDetails() const override {
+        cout << "Bike Model: " << model << endl;
+        cout << "Daily Rate: $" << getDailyRate() << endl;
+    }
+};
+
+int main() {
+    Car car1("Honda Civic", 50.0);
+    Bike bike1("KTM Duke", 30.0);
+
+    Vehicle* vehicles[2];
+    vehicles[0] = &car1;
+    vehicles[1] = &bike1;
+
+    cout << "Vehicle Rental Options:\n" << endl;
+    for (int i = 0; i < 2; i++) {
+        vehicles[i]->displayDetails();
+        cout << "------------------------\n";
+    }
+
+    return 0;
+}
