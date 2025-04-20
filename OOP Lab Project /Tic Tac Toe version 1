@@ -1,0 +1,169 @@
+#include <iostream>
+#include <vector>
+#include <ctime>
+#include <cstdlib>
+
+using namespace std;
+
+class TicTacToeGame {
+private:
+    vector<char> grid;
+    char turn;
+    bool ended;
+    char result;
+
+public:
+    TicTacToeGame() {
+        grid = vector<char>(9, ' ');
+        turn = 'X';
+        ended = false;
+        result = ' ';
+        srand((unsigned int)time(nullptr));
+    }
+
+    void startOver() {
+        for (int i = 0; i < 9; ++i) {
+            grid[i] = ' ';
+        }
+        turn = 'X';
+        ended = false;
+        result = ' ';
+    }
+
+    void printBoard() const {
+        cout << "\n";
+        for (int i = 0; i < 9; i += 3) {
+            cout << " " << grid[i] << " | " << grid[i + 1] << " | " << grid[i + 2] << " \n";
+            if (i < 6) cout << "---+---+---\n";
+        }
+        cout << "\n";
+    }
+
+    bool validMove(int idx) const {
+        if (idx < 0 || idx >= 9) return false;
+        return grid[idx] == ' ';
+    }
+
+    void playMove(int idx) {
+        if (validMove(idx)) {
+            grid[idx] = turn;
+            updateGame();
+            turn = (turn == 'X') ? 'O' : 'X';
+        }
+    }
+
+    int computerPlays() const {
+        vector<int> freeSpots;
+        for (int i = 0; i < grid.size(); ++i) {
+            if (grid[i] == ' ') {
+                freeSpots.push_back(i);
+            }
+        }
+
+        if (freeSpots.size() == 0) return -1;
+        int pick = rand() % freeSpots.size();
+        return freeSpots[pick];
+    }
+
+    void updateGame() {
+        for (int row = 0; row < 9; row += 3) {
+            if (grid[row] != ' ' && grid[row] == grid[row + 1] && grid[row] == grid[row + 2]) {
+                result = grid[row];
+                ended = true;
+                return;
+            }
+        }
+
+        for (int col = 0; col < 3; ++col) {
+            if (grid[col] != ' ' && grid[col] == grid[col + 3] && grid[col] == grid[col + 6]) {
+                result = grid[col];
+                ended = true;
+                return;
+            }
+        }
+
+        if (grid[0] != ' ' && grid[0] == grid[4] && grid[0] == grid[8]) {
+            result = grid[0];
+            ended = true;
+            return;
+        }
+
+        if (grid[2] != ' ' && grid[2] == grid[4] && grid[2] == grid[6]) {
+            result = grid[2];
+            ended = true;
+            return;
+        }
+
+        bool full = true;
+        for (auto ch : grid) {
+            if (ch == ' ') {
+                full = false;
+                break;
+            }
+        }
+
+        if (full) {
+            ended = true;
+            result = 'T';
+        }
+    }
+
+    bool isDone() const {
+        return ended;
+    }
+
+    char whoWon() const {
+        return result;
+    }
+
+    char currentTurn() const {
+        return turn;
+    }
+};
+
+int main() {
+    TicTacToeGame ttt;
+    int move;
+
+    cout << "Welcome to Tic Tac Toe!\n";
+    cout << "You're X, and the bot is O.\n";
+    cout << "Pick a square using numbers 0 through 8:\n";
+    cout << " 0 | 1 | 2 \n";
+    cout << "---+---+---\n";
+    cout << " 3 | 4 | 5 \n";
+    cout << "---+---+---\n";
+    cout << " 6 | 7 | 8 \n\n";
+
+    while (!ttt.isDone()) {
+        ttt.printBoard();
+
+        if (ttt.currentTurn() == 'X') {
+            cout << "Your move: ";
+            cin >> move;
+
+            if (!ttt.validMove(move)) {
+                cout << "That one's taken or invalid. Try another.\n";
+                continue;
+            }
+        } else {
+            cout << "Bot is thinking...\n";
+            move = ttt.computerPlays();
+            cout << "Bot picked: " << move << "\n";
+        }
+
+        ttt.playMove(move);
+    }
+
+    ttt.printBoard();
+
+    char outcome = ttt.whoWon();
+    if (outcome == 'X') {
+        cout << "You won! Nice work.\n";
+    } else if (outcome == 'O') {
+        cout << "Bot wins! Maybe next time.\n";
+    } else {
+        cout << "Draw! Nobody wins.\n";
+    }
+
+    return 0;
+}
