@@ -1,0 +1,291 @@
+/*Understand FileAnalyzer → Used for basic text file reading
+
+Work with StudentTextManager → Manages student records in plain text
+
+Learn StudentBinaryManager → Handles structured binary file storage*/
+
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+
+// ------------------- TEXT FILE ANALYZER -------------------
+class FileAnalyzer {
+public:
+    void searchWord(const string& fileName, const string& wordToFind) {
+        ifstream file(fileName);
+        string word;
+        bool found = false;
+
+        while (file >> word) {
+            if (word == wordToFind) {
+                found = true;
+                break;
+            }
+        }
+
+        file.close();
+
+        if (found)
+            cout << "Word '" << wordToFind << "' found in file!\n";
+        else
+            cout << "Word '" << wordToFind << "' not found.\n";
+    }
+
+    void countWords(const string& fileName) {
+        ifstream file(fileName);
+        string word;
+        int wordCount = 0;
+
+        if (!file) {
+            cout << "File not found!\n";
+            return;
+        }
+
+        while (file >> word) {
+            wordCount++;
+        }
+
+        file.close();
+        cout << "Total words: " << wordCount << endl;
+    }
+
+    void countLines(const string& fileName) {
+        ifstream file(fileName);
+        string line;
+        int lineCount = 0;
+
+        if (!file) {
+            cout << "File not found!\n";
+            return;
+        }
+
+        while (getline(file, line)) {
+            lineCount++;
+        }
+
+        file.close();
+        cout << "Total lines: " << lineCount << endl;
+    }
+};
+
+// ------------------- STUDENT CLASS -------------------
+class Student {
+public:
+    int id;
+    char name[50];
+    float cgpa;
+    char favSubject[50];
+
+    void input() {
+        cout << "Enter ID: ";
+        cin >> id;
+        cin.ignore();
+
+        cout << "Enter name: ";
+        cin.getline(name, 50);
+
+        cout << "Enter CGPA: ";
+        cin >> cgpa;
+        cin.ignore();
+
+        cout << "Enter favorite subject: ";
+        cin.getline(favSubject, 50);
+    }
+
+    void display() {
+        cout << "ID: " << id << ", Name: " << name
+             << ", CGPA: " << cgpa << ", Favorite Subject: " << favSubject << endl;
+    }
+};
+
+// ------------------- TEXT STUDENT MANAGER -------------------
+class StudentTextManager {
+public:
+    void addStudent() {
+        ofstream file("student.txt", ios::app);
+        int id;
+        string name;
+
+        cout << "Enter student ID: ";
+        cin >> id;
+        cin.ignore();
+        cout << "Enter student name: ";
+        getline(cin, name);
+
+        file << id << " " << name << endl;
+        file.close();
+        cout << "Student added to text file.\n";
+    }
+
+    void viewStudents() {
+        ifstream file("student.txt");
+        string name;
+        int id;
+
+        cout << "\n--- Student List (Text File) ---\n";
+        while (file >> id) {
+            getline(file, name);
+            cout << "ID: " << id << " | Name:" << name << endl;
+        }
+        file.close();
+    }
+
+    void searchStudent() {
+        ifstream file("student.txt");
+        int searchId, id;
+        string name;
+        bool found = false;
+
+        cout << "Enter ID to search: ";
+        cin >> searchId;
+
+        while (file >> id) {
+            getline(file, name);
+            if (id == searchId) {
+                cout << "Student found: ID=" << id << " Name=" << name << endl;
+                found = true;
+                break;
+            }
+        }
+
+        if (!found)
+            cout << "Student not found.\n";
+
+        file.close();
+    }
+
+    void deleteStudent() {
+        ifstream file("student.txt");
+        ofstream temp("temp.txt");
+        int id, deleteId;
+        string name;
+        bool found = false;
+
+        cout << "Enter ID to delete: ";
+        cin >> deleteId;
+
+        while (file >> id) {
+            getline(file, name);
+            if (id == deleteId) {
+                found = true;
+                continue;
+            }
+            temp << id << name << endl;
+        }
+
+        file.close();
+        temp.close();
+        remove("student.txt");
+        rename("temp.txt", "student.txt");
+
+        if (found)
+            cout << "Student deleted.\n";
+        else
+            cout << "Student not found.\n";
+    }
+
+    void updateStudent() {
+        ifstream file("student.txt");
+        ofstream temp("temp.txt");
+        int id, updateId;
+        string name, newName;
+        bool found = false;
+
+        cout << "Enter ID to update: ";
+        cin >> updateId;
+        cin.ignore();
+        cout << "Enter new name: ";
+        getline(cin, newName);
+
+        while (file >> id) {
+            getline(file, name);
+            if (id == updateId) {
+                temp << id << " " << newName << endl;
+                found = true;
+            } else {
+                temp << id << name << endl;
+            }
+        }
+
+        file.close();
+        temp.close();
+        remove("student.txt");
+        rename("temp.txt", "student.txt");
+
+        if (found)
+            cout << "Student updated.\n";
+        else
+            cout << "Student not found.\n";
+    }
+};
+
+// ------------------- BINARY STUDENT MANAGER -------------------
+class StudentBinaryManager {
+public:
+    void addStudentBinary() {
+        Student s;
+        s.input();
+
+        ofstream file("student.dat", ios::binary | ios::app);
+        file.write((char*)&s, sizeof(s));
+        file.close();
+
+        cout << "Student saved in binary file.\n";
+    }
+
+    void viewAllBinary() {
+        Student s;
+        ifstream file("student.dat", ios::binary);
+
+        cout << "\n--- Student List (Binary File) ---\n";
+        while (file.read((char*)&s, sizeof(s))) {
+            s.display();
+        }
+
+        file.close();
+    }
+};
+
+// ------------------- MAIN MENU -------------------
+int main() {
+    FileAnalyzer analyzer;
+    StudentTextManager textManager;
+    StudentBinaryManager binaryManager;
+    int choice;
+
+    do {
+        cout << "\n====== FILE HANDLING OOP MENU ======\n";
+        cout << "1. Search Word in File\n";
+        cout << "2. Count Words in File\n";
+        cout << "3. Count Lines in File\n";
+        cout << "4. Add Student (Text)\n";
+        cout << "5. View Students (Text)\n";
+        cout << "6. Search Student by ID (Text)\n";
+        cout << "7. Delete Student by ID (Text)\n";
+        cout << "8. Update Student Name (Text)\n";
+        cout << "9. Add Student (Binary)\n";
+        cout << "10. View Students (Binary)\n";
+        cout << "0. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: analyzer.searchWord("sample.txt", "apple"); break;
+            case 2: analyzer.countWords("sample.txt"); break;
+            case 3: analyzer.countLines("sample.txt"); break;
+            case 4: textManager.addStudent(); break;
+            case 5: textManager.viewStudents(); break;
+            case 6: textManager.searchStudent(); break;
+            case 7: textManager.deleteStudent(); break;
+            case 8: textManager.updateStudent(); break;
+            case 9: binaryManager.addStudentBinary(); break;
+            case 10: binaryManager.viewAllBinary(); break;
+            case 0: cout << "Exiting program. Goodbye!\n"; break;
+            default: cout << "Invalid choice. Try again.\n";
+        }
+
+    } while (choice != 0);
+
+    return 0;
+}
